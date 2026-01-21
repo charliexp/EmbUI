@@ -171,7 +171,10 @@ GO.prototype = new Array();
     'go':'querySelectorAll',
     'query':'querySelectorAll',
     'attr':'getAttribute','sattr':'setAttribute','rattr':'removeAttribute',
-    'byid':'getElementById',
+    'byid': function(id){
+      var elem = document.getElementById(id);
+      return elem ? [elem] : [];
+    },
     'bytag':'getElementsByTagName',
     'byname':'getElementsByName',
     'byclass':'getElementsByClassName',
@@ -1043,6 +1046,7 @@ async function process_XLoadSection(arr){
   return
 }
 
+// flatten element ids in nested object to allow unique 
 function extend_ids(obj, prefix){
   if (!(obj instanceof Object) || !(obj.block instanceof Array)) return
   if (obj.extended_ids)
@@ -1069,15 +1073,16 @@ function extend_ids(obj, prefix){
  * @returns 
  */
 function extend_value_ids(obj, prefix){
-  console.log("Extended iDs for values:", arr)
-  if (!(obj instanceof Object) && !(obj instanceof Array)) return
-  //prefix += prefix ? '.' + obj.section : obj.section
+  if (!(obj instanceof Object)) return
   let arr = []
-  //for (item of obj){
   for (const [key, v] of Object.entries(obj)){
-    let p = prefix ? prefix + '.' + key : key
+    let p
+    if (!Array.isArray(obj)){
+      p = prefix ? prefix + '.' + key : key
+    } else
+      p = prefix
     if (v instanceof Object || v instanceof Array){
-      arr.push(extend_value_ids(v, p))
+      arr.push(...extend_value_ids(v, p))
     } else {
       arr.push({[p]: v})
     }
@@ -1301,8 +1306,6 @@ var render = function(){
       else
         frame = obj.block
 
-      console.log("Processing vals", frame)
-
       /*
         Find DOM object with id 'key' and sets it's 'value' property to 'val'.
         If 'html' is set to 'true', than values applied as html-text value,
@@ -1311,7 +1314,7 @@ var render = function(){
       */
       function setValue(key, val, html = false){
         if (val == null || typeof val == "object") return;  // skip undef/null or (empty) objects
-        let el = go("#"+key);
+        let el = go().byid(key);  // this will handle key with dot chars
         if (!el.length) return;
         if (html === true ){ el.html(val); return; }
 
@@ -1357,8 +1360,7 @@ var render = function(){
         el[0].value = val;
       }
 
-      for (const item of frame) if (typeof item == "object") {
-      //for (var i = 0; i < frame.length; i++) if (typeof frame[i] == "object") {
+      for (const item of frame) if (item instanceof Object) {
         /* check if the object contains just an object with key:value pairs (comes from echo-back packets)
           { "id": "someid", "value": "somevalue", "html": true }
         */
