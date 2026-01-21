@@ -472,6 +472,19 @@ class Interface {
         JsonObject json_section_uidata(){ return json_section_begin(P_uidata); };
 
         /**
+         * @brief start section with values to update on page
+         * @note it's equivalent to opening a new value frame but the difference is that
+         * section is processed synchronously in order of appearance. This could be necessary when
+         * need to update previously created html objects within the same frame.
+         * See example in basicui::page_settings_time()
+         * 
+         * @return JsonObject 
+         */
+        JsonObject Interface::json_section_value(){
+            return json_section_begin(P_value);
+        }
+
+        /**
          * @brief section that will side-load external data
          * for any element in section's block where a key 'url' is present
          * a side-load data will be fetched and put into 'block' object of that element

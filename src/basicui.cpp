@@ -163,7 +163,7 @@ void page_settings_time(Interface *interf){
         interf->json_section_end();
 
         // replace section with NTP servers information
-        interf->json_section_begin(P_ntp_servers, "NTP Servers", false, false, true);
+        interf->json_section_begin(P_ntp_servers, "NTP Servers", false, false, true, true);
             for (size_t i = 0; i != SNTP_MAX_SERVERS; ++i){
                 String srv(P_ntp);
                 srv += i;
@@ -171,9 +171,8 @@ void page_settings_time(Interface *interf){
             }
         interf->json_section_end();
 
-        interf->json_section_begin(P_value);
-            interf->value(V_timezone, embui.getConfig()[V_timezone]);
-
+        interf->json_section_value();
+        interf->value(V_timezone, embui.getConfig()[V_timezone]);
     interf->json_frame_flush();
 }
 
