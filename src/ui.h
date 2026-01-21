@@ -480,7 +480,7 @@ class Interface {
          * 
          * @return JsonObject 
          */
-        JsonObject Interface::json_section_value(){
+        JsonObject json_section_value(){
             return json_section_begin(P_value);
         }
 
