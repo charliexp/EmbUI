@@ -165,7 +165,7 @@ if freshtag ${tzcsv} || [ $refresh_rq -eq 1 ] ; then
     echo '"label","value"' > ${dst}/js/zones.csv
     curl -sL $tzcsv >> ${dst}/js/zones.csv
     python tzgen.py
-    ${compress_cmd} -f ${dst}/js/tz.json
+    ${compress_cmd} ${dst}/js/tz.json
     rm -f ${dst}/js/tz.json ${dst}/js/zones.csv
 fi
 

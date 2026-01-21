@@ -1,6 +1,11 @@
 ## Changelog
 
-### v4.3.1
+### v4.3.3
+ - basicui - fix mqtt action
+ - embui.js - fixed bug with updating select elements
+ - basicui - fixed bugs displaying time/timezone page
+
+### v4.3.2
  - fix WiFi AP valuespublishing
 
 ### v4.3.1
